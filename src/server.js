@@ -1,7 +1,10 @@
 import http from "node:http";
 import { bodyParser } from "./middlewares/bodyParser.js";
+import { Database } from "./database.js";
 
 const PORT = 3333;
+
+const database = new Database();
 
 const server = http.createServer(async (req, res) => {
   const { url, method } = req;
