@@ -1,11 +1,16 @@
 import http from "node:http";
+import { bodyParser } from "./middlewares/bodyParser.js";
 
 const PORT = 3333;
 
-const server = http.createServer((req, res) => {
-  res.writeHead(200);
+const server = http.createServer(async (req, res) => {
+  const { url, method } = req;
 
-  res.end("Hello World!");
+  await bodyParser(req, res);
+
+  const { body } = req;
+
+  res.end(JSON.stringify({ url, method, body }));
 });
 
 server.listen(PORT, () => {
