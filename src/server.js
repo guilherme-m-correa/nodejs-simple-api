@@ -1,19 +1,23 @@
 import http from "node:http";
 import { bodyParser } from "./middlewares/bodyParser.js";
-import { Database } from "./database.js";
+import { routes } from "./routes.js";
 
 const PORT = 3333;
-
-const database = new Database();
 
 const server = http.createServer(async (req, res) => {
   const { url, method } = req;
 
   await bodyParser(req, res);
 
-  const { body } = req;
+  const route = routes.find((route) => {
+    return route.method === method && route.path === url;
+  });
 
-  res.end(JSON.stringify({ url, method, body }));
+  if (route) {
+    return route.handler(req, res);
+  }
+
+  return res.writeHead(404).end();
 });
 
 server.listen(PORT, () => {
