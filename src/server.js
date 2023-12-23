@@ -1,5 +1,6 @@
 import http from "node:http";
 import { bodyParser } from "./middlewares/bodyParser.js";
+import { extractQueryParams } from "./util/extract-query-params.js";
 import { routes } from "./routes.js";
 
 const PORT = 3333;
@@ -9,7 +10,6 @@ const server = http.createServer(async (req, res) => {
 
   await bodyParser(req, res);
 
-
   const route = routes.find((route) => {
     return route.method === method && route.path.test(url);
   });
@@ -17,7 +17,10 @@ const server = http.createServer(async (req, res) => {
   if (route) {
     const routeParams = req.url.match(route.path)
 
-    req.params = routeParams.groups;
+    const { query, ...params } = routeParams.groups
+
+    req.params = params
+    req.query = query ? extractQueryParams(query) : {}
 
     return route.handler(req, res);
   }

@@ -27,7 +27,9 @@ export class Database {
         return Object.entries(search).some(([key, value]) => {
           if (!value) return true
 
-          return row[key].includes(value)
+          const lowerCaseValue = String(value).toLowerCase()
+
+          return String(row[key]).toLowerCase().includes(lowerCaseValue)
         })
       })
     }
