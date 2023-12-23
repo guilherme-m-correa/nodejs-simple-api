@@ -8,7 +8,7 @@ export async function bodyParser(req, res) {
   try {
     req.body = JSON.parse(Buffer.concat(chunks).toString());
   } catch {
-    req.body = null;
+    req.body = {};
   }
 
   res.setHeader("Content-type", "application/json");
